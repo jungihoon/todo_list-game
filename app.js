@@ -219,6 +219,26 @@ async function saveEdit() {
   closeEditModal();
 }
 
+function openResetModal() {
+  const overlay = document.getElementById('reset-modal');
+  overlay.style.display = 'flex';
+  overlay.classList.remove('closing');
+}
+
+function closeResetModal() {
+  const overlay = document.getElementById('reset-modal');
+  overlay.classList.add('closing');
+  setTimeout(() => {
+    overlay.style.display = 'none';
+    overlay.classList.remove('closing');
+  }, 250);
+}
+
+async function confirmReset() {
+  await set(statsRef, { totalExp: 0 });
+  closeResetModal();
+}
+
 function closeEditModal() {
   const overlay = document.getElementById('edit-modal');
   overlay.classList.add('closing');
@@ -304,6 +324,13 @@ document.getElementById('quest-input').addEventListener('keydown', e => {
 
 document.getElementById('quest-input').addEventListener('animationend', function () {
   this.classList.remove('shake');
+});
+
+document.getElementById('reset-btn').addEventListener('click', openResetModal);
+document.getElementById('reset-confirm-btn').addEventListener('click', confirmReset);
+document.getElementById('reset-cancel-btn').addEventListener('click', closeResetModal);
+document.getElementById('reset-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeResetModal();
 });
 
 document.getElementById('edit-save-btn').addEventListener('click', saveEdit);

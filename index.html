@@ -19,13 +19,29 @@
     <p>할 일은 하고 살자.</p>
   </div>
 
+  <!-- Reset Confirm Modal -->
+  <div class="overlay" id="reset-modal" style="display:none;">
+    <div class="modal reset-modal">
+      <div class="modal-inner">
+        <span class="modal-icon">⚠️</span>
+        <div class="modal-headline reset-headline">초기화</div>
+        <div class="modal-sub">레벨과 EXP가 모두 0으로 초기화됩니다.<br>정말 초기화하시겠습니까?</div>
+        <div class="edit-actions">
+          <button class="modal-ok reset-confirm-btn" id="reset-confirm-btn">초기화</button>
+          <button class="edit-cancel-btn" id="reset-cancel-btn">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Player Card -->
   <div class="player-card">
     <div class="avatar">🧙</div>
     <div class="player-info">
       <div class="player-name-row">
-        <span class="player-name">모코코</span>
+        <span class="player-name">게스트 계정</span>
         <span class="player-title-badge" id="title-badge">수련생</span>
+        <button class="reset-btn" id="reset-btn" title="레벨 초기화">↺ 초기화</button>
       </div>
       <div class="level-row">레벨 <span id="lv-num">1</span> · 다음 레벨까지 <span id="lv-remain">200</span> EXP</div>
       <div class="exp-label-row">
