@@ -404,9 +404,9 @@ body::before {
   transition: opacity 0.15s, transform 0.15s;
 }
 
-.diff-btn.easy::after   { content: '+50 EXP';  color: var(--easy);   border-color: rgba(61,220,110,0.4); }
-.diff-btn.normal::after { content: '+100 EXP'; color: var(--normal); border-color: rgba(77,166,255,0.4); }
-.diff-btn.hard::after   { content: '+200 EXP'; color: var(--hard);   border-color: rgba(255,85,102,0.4); }
+.diff-btn.easy::after   { content: '+50 XP';  color: var(--easy);   border-color: rgba(61,220,110,0.4); }
+.diff-btn.normal::after { content: '+100 XP'; color: var(--normal); border-color: rgba(77,166,255,0.4); }
+.diff-btn.hard::after   { content: '+200 XP'; color: var(--hard);   border-color: rgba(255,85,102,0.4); }
 
 .diff-btn:hover::after {
   opacity: 1;
@@ -461,172 +461,240 @@ body::before {
   color: var(--gold);
 }
 
-/* ─────────────── Quest Cards ─────────────── */
+/* ─────────────── Quest List Grid ─────────────── */
 .quest-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
 }
 
+/* ─────────────── Quest Card ─────────────── */
 .quest-card {
   background: var(--bg-card);
   border: 1px solid var(--border);
+  border-top: 3px solid transparent;
   border-radius: 14px;
-  padding: 14px 18px;
+  padding: 16px;
   display: flex;
-  align-items: center;
-  gap: 14px;
-  transition: background 0.2s, border-color 0.2s, transform 0.2s;
-  animation: slideIn 0.3s ease-out both;
+  flex-direction: column;
+  min-height: 260px;
   position: relative;
   overflow: hidden;
+  animation: cardIn 0.3s ease-out both;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-/* Difficulty accent bar */
-.quest-card::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 4px;
-  border-radius: 14px 0 0 14px;
-}
-
-.quest-card.easy::before   { background: var(--easy); }
-.quest-card.normal::before { background: var(--normal); }
-.quest-card.hard::before   { background: var(--hard); }
+.quest-card.easy   { border-top-color: var(--easy); }
+.quest-card.normal { border-top-color: var(--normal); }
+.quest-card.hard   { border-top-color: var(--hard); }
 
 .quest-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-bright);
-  transform: translateX(3px);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.45);
 }
 
-.quest-card.completed       { opacity: 0.55; }
-.quest-card.completed:hover { opacity: 0.7; }
+.quest-card.easy:hover   { border-color: rgba(61,220,110,0.35); }
+.quest-card.normal:hover { border-color: rgba(77,166,255,0.35); }
+.quest-card.hard:hover   { border-color: rgba(255,85,102,0.35); }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(-18px); }
-  to   { opacity: 1; transform: translateX(0); }
+.quest-card.completed { opacity: 0.65; }
+
+@keyframes cardIn {
+  from { opacity: 0; transform: scale(0.92) translateY(12px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* Complete animation */
 .quest-card.completing {
-  animation: completeOut 0.55s cubic-bezier(0.55, 0, 1, 0.45) forwards !important;
+  animation: cardComplete 0.5s ease-out forwards !important;
   pointer-events: none;
 }
 
-@keyframes completeOut {
-  0%   { transform: translateX(0) scale(1);    opacity: 1; }
-  25%  { transform: translateX(-6px) scale(1.02); }
-  100% { transform: translateX(110%) scale(0.85); opacity: 0; }
+@keyframes cardComplete {
+  0%   { transform: scale(1);    opacity: 1; }
+  30%  { transform: scale(1.05); }
+  100% { transform: scale(0.75); opacity: 0; }
 }
 
 /* Delete animation */
 .quest-card.deleting {
-  animation: deleteOut 0.3s ease-out forwards !important;
+  animation: cardDelete 0.3s ease-out forwards !important;
   pointer-events: none;
 }
 
-@keyframes deleteOut {
-  to { opacity: 0; transform: translateX(100%) scaleY(0.6); }
+@keyframes cardDelete {
+  to { opacity: 0; transform: scale(0.8); }
 }
 
-/* ── Check Button ── */
-.check-btn {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 2px solid var(--border-bright);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.2s;
+/* ── Card Header ── */
+.card-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-  color: transparent;
+  justify-content: space-between;
+  margin-bottom: 18px;
 }
 
-.check-btn:hover {
-  border-color: var(--easy);
-  background: rgba(61,220,110,0.1);
-  color: var(--easy);
-}
-
-.quest-card.completed .check-btn {
-  background: var(--easy);
-  border-color: var(--easy);
-  color: #000;
-}
-
-/* ── Quest Content ── */
-.quest-body { flex: 1; min-width: 0; }
-
-.quest-title {
-  font-size: 17px;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 5px;
-}
-
-.quest-card.completed .quest-title {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
-
-.quest-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.badge {
-  padding: 2px 9px;
-  border-radius: 5px;
-  font-size: 12px;
+.card-rank {
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.8px;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
 }
 
-.badge.easy   { background: rgba(61,220,110,0.12);  color: var(--easy);   border: 1px solid rgba(61,220,110,0.25); }
-.badge.normal { background: rgba(77,166,255,0.12);  color: var(--normal); border: 1px solid rgba(77,166,255,0.25); }
-.badge.hard   { background: rgba(255,85,102,0.12);  color: var(--hard);   border: 1px solid rgba(255,85,102,0.25); }
+.quest-card.easy   .card-rank { color: var(--easy);   border-color: rgba(61,220,110,0.4); background: rgba(61,220,110,0.08); }
+.quest-card.normal .card-rank { color: var(--normal); border-color: rgba(77,166,255,0.4); background: rgba(77,166,255,0.08); }
+.quest-card.hard   .card-rank { color: var(--hard);   border-color: rgba(255,85,102,0.4); background: rgba(255,85,102,0.08); }
 
-.exp-tag  { font-size: 13px; color: var(--gold); font-weight: 600; }
-.done-tag { font-size: 12px; color: var(--easy); font-weight: 600; }
-
-/* ── Card Action Buttons (수정 / 삭제) ── */
+/* ── Card Actions (수정/삭제) ── */
 .card-actions {
   display: flex;
   gap: 4px;
-  flex-shrink: 0;
 }
 
 .edit-btn,
 .del-btn {
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 13px;
   transition: all 0.18s;
-  flex-shrink: 0;
   color: var(--text-muted);
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
-.edit-btn:hover, .del-btn:hover { opacity: 1; }
+.edit-btn:hover { opacity: 1; color: var(--normal); border-color: rgba(77,166,255,0.35); background: rgba(77,166,255,0.08); }
+.del-btn:hover  { opacity: 1; color: var(--hard);   border-color: rgba(255,85,102,0.35); background: rgba(255,85,102,0.08); }
+
+/* 완료된 퀘스트는 수정 버튼 숨김 */
+.quest-card.completed .edit-btn { display: none; }
+
+/* ── Card Body ── */
+.card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+.card-icon-wrap {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 2px;
+}
+
+.quest-card.easy   .card-icon-wrap { background: rgba(61,220,110,0.1);  border: 1px solid rgba(61,220,110,0.2); }
+.quest-card.normal .card-icon-wrap { background: rgba(77,166,255,0.1);  border: 1px solid rgba(77,166,255,0.2); }
+.quest-card.hard   .card-icon-wrap { background: rgba(255,85,102,0.1);  border: 1px solid rgba(255,85,102,0.2); }
+
+.card-target-label {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.quest-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.quest-card.completed .quest-title { color: var(--text-muted); }
+
+/* ── Card Footer ── */
+.card-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.reward-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.reward-xp {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.quest-card.easy   .reward-xp { color: var(--easy); }
+.quest-card.normal .reward-xp { color: var(--normal); }
+.quest-card.hard   .reward-xp { color: var(--hard); }
+.quest-card.completed .reward-xp { color: var(--text-muted); }
+
+/* ── Complete Button ── */
+.card-complete-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border-bright);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: transparent;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.card-complete-btn:hover {
+  border-color: var(--easy);
+  background: rgba(61,220,110,0.1);
+  color: var(--easy);
+}
+
+/* ── SLAYED Overlay ── */
+.slayed-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.42);
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.slayed-overlay span {
+  font-family: 'Cinzel', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.22);
+  border: 3px solid rgba(255,255,255,0.15);
+  padding: 8px 18px;
+  border-radius: 4px;
+  transform: rotate(-15deg);
+  letter-spacing: 5px;
+  display: block;
+}
 
 .edit-btn:hover {
   color: var(--normal);
@@ -652,6 +720,12 @@ body::before {
 
 .empty .icon { font-size: 52px; margin-bottom: 14px; opacity: 0.4; }
 .empty p     { font-size: 17px; }
+
+/* 그리드 안에서 전체 너비 차지 */
+.quest-list .empty {
+  grid-column: 1 / -1;
+  width: 100%;
+}
 
 /* ─────────────── Edit Modal ─────────────── */
 .edit-modal { padding: 36px 32px; }
@@ -854,11 +928,12 @@ body::before {
 
 /* ─────────────── Responsive ─────────────── */
 @media (max-width: 560px) {
-  .input-row      { flex-direction: column; }
-  .diff-group     { justify-content: stretch; }
-  .diff-btn       { flex: 1; text-align: center; }
-  .player-card    { flex-direction: column; align-items: center; text-align: center; }
+  .input-row       { flex-direction: column; }
+  .diff-group      { justify-content: stretch; }
+  .diff-btn        { flex: 1; text-align: center; }
+  .player-card     { flex-direction: column; align-items: center; text-align: center; }
   .player-name-row { justify-content: center; }
-  .stats-row      { justify-content: center; }
-  .modal          { padding: 32px 24px; }
+  .stats-row       { justify-content: center; }
+  .modal           { padding: 32px 24px; }
+  .quest-list      { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
 }

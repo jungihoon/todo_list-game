@@ -115,21 +115,37 @@ function renderList() {
 
   el.innerHTML = items.map(q => {
     const d = DIFF[q.diff];
+  const RANK = { Easy: '쉬움', Normal: '보통', Hard: '어려움' };
+  const ICON = { Easy: '🌱',    Normal: '⚔️',     Hard: '🔥' };
+
     return `
       <div class="quest-card ${q.diff.toLowerCase()} ${q.done ? 'completed' : ''}" id="card-${q.id}">
-        <button class="check-btn" onclick="completeQuest('${q.id}')" title="퀘스트 완료">${q.done ? '✓' : ''}</button>
-        <div class="quest-body">
-          <div class="quest-title">${escapeHtml(q.title)}</div>
-          <div class="quest-meta">
-            <span class="badge ${q.diff.toLowerCase()}">${d.icon} ${d.label}</span>
-            <span class="exp-tag">+${d.exp} EXP</span>
-            ${q.done ? '<span class="done-tag">✓ 완료됨</span>' : ''}
+
+        <div class="card-header">
+          <span class="card-rank">${RANK[q.diff]}</span>
+          <div class="card-actions">
+            <button class="edit-btn" onclick="editQuest('${q.id}')" title="수정">✏️</button>
+            <button class="del-btn"  onclick="deleteQuest('${q.id}')" title="삭제">🗑️</button>
           </div>
         </div>
-        <div class="card-actions">
-          <button class="edit-btn" onclick="editQuest('${q.id}')" title="수정">✎</button>
-          <button class="del-btn"  onclick="deleteQuest('${q.id}')" title="삭제">✕</button>
+
+        <div class="card-body">
+          <div class="card-icon-wrap">${ICON[q.diff]}</div>
+          <div class="card-target-label">퀘스트</div>
+          <div class="quest-title">${escapeHtml(q.title)}</div>
         </div>
+
+        <div class="card-footer">
+          <div>
+            <div class="reward-label">REWARD</div>
+            <div class="reward-xp">+${d.exp} XP</div>
+          </div>
+          ${!q.done
+            ? `<button class="card-complete-btn" onclick="completeQuest('${q.id}')" title="퀘스트 완료">✓</button>`
+            : ''}
+        </div>
+
+        ${q.done ? '<div class="slayed-overlay"><span>SLAYED</span></div>' : ''}
       </div>`;
   }).join('');
 }
