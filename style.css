@@ -34,13 +34,13 @@ body::after {
   position: fixed;
   bottom: 0;
   right: 0;
-  width: 370px;
-  height: 460px;
-  background: url('bg.png') no-repeat bottom right;
+  width: 420px;
+  height: 420px;
+  /* background: url('bg.png') no-repeat bottom right; */
   background-size: contain;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
-  opacity: 0.28;
+  opacity: 0.22;
   pointer-events: none;
   z-index: 0;
 }
